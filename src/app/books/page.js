@@ -1,5 +1,4 @@
 // src/app/books/pages.js
-
 "use client";
 import { useEffect, useState } from "react";
 
@@ -43,7 +42,10 @@ const BookList = () => {
       }
     };
 
-    fetchBooks();
+    // Call fetchBooks after setting the token
+    if (token) {
+      fetchBooks();
+    }
   }, [token]);
 
   return (
