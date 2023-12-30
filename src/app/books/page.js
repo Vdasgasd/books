@@ -1,30 +1,17 @@
-// pages/index.js
+// src/app/books.js
 "use client";
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-const BookList = ({ books }) => {
-  return (
-    <div className="max-w-2xl mx-auto mt-8 p-4 border rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Book List</h2>
-      {books.data.map((book) => (
-        <div key={book.id} className="mb-4">
-          <h3 className="text-xl font-semibold">{book.title}</h3>
-          <p className="text-gray-600 mb-2">{book.subtitle}</p>
-          <p className="text-gray-700">{book.description}</p>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const Home = () => {
-  const [books, setBooks] = useState(null);
+const BookList = () => {
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch data from the server
         const response = await fetch(
-          "http://book-crud-service-6dmqxfovfq-et.a.run.app/api/books",
+          "https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books",
           {
             method: "GET",
             headers: {
@@ -36,27 +23,37 @@ const Home = () => {
 
         const data = await response.json();
 
-        if (response.ok) {
-          setBooks(data);
-        } else {
-          console.error("Failed to get books:", data.message);
-        }
+        // Check if the 'data' property exists in the response
+        const booksData = data.data ? data.data : [];
+
+        setBooks(booksData);
+        setLoading(false);
       } catch (error) {
-        console.error("Error getting books:", error);
+        console.error("Error fetching data:", error);
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div>
-        <h1 className="text-4xl font-bold mb-8">Next.js Book App</h1>
-        {books && <BookList books={books} />}
+    <div className="container mx-auto mt-8">
+      <h1 className="text-3xl font-bold mb-4">Book List</h1>
+      <div className="mb-4">
+        {books.map((book) => (
+          <div key={book.id} className=" shadow-md rounded p-6 mb-4">
+            <h2 className="text-xl font-semibold mb-2">{book.title}</h2>
+            <p className="text-gray-700">{book.description}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default Home;
+export default BookList;
