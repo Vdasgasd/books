@@ -3,7 +3,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-const BookList = ({ token }) => {
+const BookList = () => {
   const [books, setBooks] = useState([]);
   const [token, setToken] = useState("");
 
