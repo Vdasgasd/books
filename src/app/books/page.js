@@ -2,23 +2,19 @@
 "use client";
 import { useEffect, useState } from "react";
 
-const BookList = () => {
+const BookList = ({ token }) => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch(
-          "https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books",
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-              // Include any necessary authorization headers
-            },
-          }
-        );
+        const response = await fetch("/api/books", {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -36,7 +32,7 @@ const BookList = () => {
     };
 
     fetchBooks();
-  }, []); // The empty dependency array ensures that the effect runs once when the component mounts
+  }, [token]);
 
   return (
     <div>
