@@ -1,6 +1,7 @@
 // src/components/BookList.js
 "use client"; // src/components/BookList.js
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
@@ -18,31 +19,25 @@ const BookList = () => {
   });
 
   const [selectedBook, setSelectedBook] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  const router = useRouter();
+  const token = router.query.token || "";
 
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       try {
-        const initialFakeData = [
+        const response = await fetch(
+          "https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books",
           {
-            id: 1,
-            user_id: 1,
-            isbn: "9781491943533",
-            title: "Practical Modern JavaScript",
-            subtitle: "Dive into ES6 and the Future of JavaScript",
-            author: "Nicolás Bevacqua",
-            published: "2017-07-16 00:00:00",
-            publisher: "O'Reilly Media",
-            pages: 334,
-            description:
-              "To get the most out of modern JavaScript, you need to learn the latest features of its parent specification, ECMAScript 6 (ES6). This book provides a highly practical look at ES6, without getting lost in the specification or its implementation details.",
-            website:
-              "https://github.com/mjavascript/practical-modern-javascript",
-            created_at: "2023-01-12T14:50:05.000000Z",
-            updated_at: "2023-01-12T14:50:05.000000Z",
-          },
-          // Add more books as needed
-        ];
-        setBooks(initialFakeData);
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+        setBooks(data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -51,56 +46,85 @@ const BookList = () => {
     };
 
     fetchData();
-  }, []); // the empty dependency array ensures that the effect runs only once
+  }, [token]);
 
-  const [showAddForm, setShowAddForm] = useState(false);
+  const handleUpdate = async (id, newData) => {
+    try {
+      // Update data on the server
+      const response = await fetch(
+        `https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books/${id}/edit`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            a,
+          },
+          body: JSON.stringify(newData),
+        }
+      );
+      const updatedBook = await response.json();
 
-  const handleUpdate = (id, newData) => {
-    const updatedBooks = books.map((book) =>
-      book.id === id
-        ? {
-            ...book,
-            ...newData,
-            updated_at: new Date().toISOString(),
-          }
-        : book
-    );
-
-    setBooks(updatedBooks);
-    setSelectedBook(null); // Reset selectedBook after update
+      // Update state
+      setBooks((prevBooks) =>
+        prevBooks.map((book) => (book.id === id ? updatedBook : book))
+      );
+      setSelectedBook(null); // Reset selectedBook after update
+    } catch (error) {
+      console.error("Error updating book:", error);
+    }
   };
 
-  const handleDelete = (id) => {
-    const filteredBooks = books.filter((book) => book.id !== id);
+  const handleDelete = async (id) => {
+    try {
+      // Delete data on the server
+      await fetch(
+        `https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-    setBooks(filteredBooks);
+      // Update state
+      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
+    } catch (error) {
+      console.error("Error deleting book:", error);
+    }
   };
 
-  const handleAddBook = () => {
-    // Adding a new book to the state with current timestamp
-    setBooks([
-      ...books,
-      {
-        ...newBook,
-        id: books.length + 1,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      },
-    ]);
-    // Clearing the form after adding a new book
-    setNewBook({
-      title: "",
-      description: "",
-      subtitle: "",
-      author: "",
-      isbn: "",
-      published: "",
-      publisher: "",
-      pages: 0,
-      website: "",
-    });
-    // Hide the "Add Book" form after adding a new book
-    setShowAddForm(false);
+  const handleAddBook = async () => {
+    try {
+      // Add data on the server
+      const response = await fetch(
+        "https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newBook),
+        }
+      );
+      const addedBook = await response.json();
+
+      // Update state
+      setBooks((prevBooks) => [...prevBooks, addedBook]);
+      // Clearing the form after adding a new book
+      setNewBook({
+        title: "",
+        description: "",
+        subtitle: "",
+        author: "",
+        isbn: "",
+        published: "",
+        publisher: "",
+        pages: 0,
+        website: "",
+      });
+      // Hide the "Add Book" form after adding a new book
+      setShowAddForm(false);
+    } catch (error) {
+      console.error("Error adding book:", error);
+    }
   };
 
   const handleSelectBook = (book) => {

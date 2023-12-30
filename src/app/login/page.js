@@ -2,12 +2,12 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+const [token, setToken] = useState("");
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const token = "";
 
   const handleLogin = async () => {
     try {
@@ -32,8 +32,14 @@ const Login = () => {
         alert("Login successful!");
         // Save the token for future requests if needed
         const token = data.token;
+        setToken(token);
+        //router.push("/books");
         // Call function to get user profile after login
         // getUserProfile(token);
+        router.push({
+          pathname: "/books",
+          query: { token: token }, // Pass the token as a query parameter
+        });
       } else {
         alert("Login failed: " + data.message);
       }
