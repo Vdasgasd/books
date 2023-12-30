@@ -1,5 +1,4 @@
-// components/BookList.js
-"use client";
+// src/app/books/pages.js
 import { useEffect, useState } from "react";
 
 const BookList = ({ token }) => {
@@ -8,16 +7,20 @@ const BookList = ({ token }) => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch("/api/books", {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books",
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
 
         if (response.ok) {
-          const data = await response.json();
           setBooks(data);
         } else {
           console.error(
@@ -41,7 +44,6 @@ const BookList = ({ token }) => {
         {books.map((book) => (
           <li key={book.id}>
             <strong>{book.title}</strong> by {book.author}
-            <p className="text-gray-700">{book.description}</p>
           </li>
         ))}
       </ul>
