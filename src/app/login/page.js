@@ -33,7 +33,7 @@ const Login = () => {
         // Save the token for future requests if needed
         const token = data.token;
         // Call function to get user profile after login
-        getUserProfile(token);
+        // getUserProfile(token);
       } else {
         alert("Login failed: " + data.message);
       }
