@@ -26,15 +26,10 @@ const BookList = () => {
           }
         );
 
-        const data = await response.json();
+        const responseData = await response.json();
 
         if (response.ok) {
-          // Check if data is an array before setting the state
-          if (Array.isArray(data)) {
-            setBooks(data);
-          } else {
-            console.error("Invalid data format received:", data);
-          }
+          setBooks(responseData.data);
         } else {
           console.error(
             "Failed to fetch books:",
@@ -57,27 +52,13 @@ const BookList = () => {
     <div>
       <h2>Book List</h2>
 
-      {books?.map((book) => (
-        <div key={book.id} className=" shadow-md rounded p-6 mb-4">
-          <h2 className="text-xl font-semibold mb-2">{book.title}</h2>
-          <p className="text-gray-700">{book.description}</p>
-
-          <div className="mt-5">
-            {/* <button
-              onClick={() => handleSelectBook(book)}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
-            >
-              Detail & update
-            </button>
-            <button
-              onClick={() => handleDelete(book.id)}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Delete
-            </button> */}
-          </div>
-        </div>
-      ))}
+      <ul>
+        {books.map((book) => (
+          <li key={book.id}>
+            <strong>{book.title}</strong> by {book.author}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
