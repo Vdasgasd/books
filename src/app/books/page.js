@@ -24,7 +24,14 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://book-crud-service-6dmqxfovfq-et.a.run.app/api/books"
+          "http://book-crud-service-6dmqxfovfq-et.a.run.app/api/books",
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         const data = await response.json();
