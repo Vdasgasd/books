@@ -1,4 +1,6 @@
 // src/app/books/pages.js
+
+"use client";
 import { useEffect, useState } from "react";
 
 const BookList = ({ token }) => {
