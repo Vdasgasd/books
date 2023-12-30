@@ -52,7 +52,7 @@ const BookList = () => {
     <div>
       <h2>Book List</h2>
 
-      {books.map((book) => (
+      {books?.map((book) => (
         <div key={book.id} className=" shadow-md rounded p-6 mb-4">
           <h2 className="text-xl font-semibold mb-2">{book.title}</h2>
           <p className="text-gray-700">{book.description}</p>
