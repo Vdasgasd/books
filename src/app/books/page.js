@@ -1,7 +1,6 @@
 // src/components/BookList.js
 "use client"; // src/components/BookList.js
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
@@ -21,21 +20,13 @@ const BookList = () => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const router = useRouter();
-  const token = router.query.token || "";
-
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch data from the server instead of using fake data
         const response = await fetch(
-          "https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          "https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books"
         );
-
         const data = await response.json();
         setBooks(data);
         setLoading(false);
@@ -46,7 +37,7 @@ const BookList = () => {
     };
 
     fetchData();
-  }, [token]);
+  }, []);
 
   const handleUpdate = async (id, newData) => {
     try {
@@ -57,7 +48,7 @@ const BookList = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            a,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(newData),
         }
