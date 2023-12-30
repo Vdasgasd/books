@@ -29,7 +29,12 @@ const BookList = () => {
         const data = await response.json();
 
         if (response.ok) {
-          setBooks(data);
+          // Check if data is an array before setting the state
+          if (Array.isArray(data)) {
+            setBooks(data);
+          } else {
+            console.error("Invalid data format received:", data);
+          }
         } else {
           console.error(
             "Failed to fetch books:",
