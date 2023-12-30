@@ -5,8 +5,15 @@ import { useEffect, useState } from "react";
 
 const BookList = ({ token }) => {
   const [books, setBooks] = useState([]);
+  const [token, setToken] = useState("");
 
   useEffect(() => {
+    const storedToken = sessionStorage.getItem("userData");
+    if (storedToken) {
+      const parsedToken = JSON.parse(storedToken).token;
+      setToken(parsedToken);
+    }
+
     const fetchBooks = async () => {
       try {
         const response = await fetch(
@@ -42,6 +49,7 @@ const BookList = ({ token }) => {
   return (
     <div>
       <h2>Book List</h2>
+
       <ul>
         {books.map((book) => (
           <li key={book.id}>
