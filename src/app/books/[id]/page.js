@@ -53,7 +53,6 @@ const DetailBooks = ({ params }) => {
 
   const handleUpdate = async (id, newData) => {
     try {
-      // Update data on the server
       const response = await fetch(
         `https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books/${id}/edit`,
         {
@@ -67,11 +66,9 @@ const DetailBooks = ({ params }) => {
       );
 
       if (response.ok) {
-        // Update state with the updated book
         const updatedBook = await response.json();
         setBook(updatedBook);
 
-        // Hide the update form after a successful update
         setShowUpdateForm(false);
       } else {
         console.error(
@@ -87,7 +84,6 @@ const DetailBooks = ({ params }) => {
 
   const handleDelete = async (id) => {
     try {
-      // Delete data on the server
       await fetch(
         `https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books/${id}`,
         {
@@ -107,198 +103,222 @@ const DetailBooks = ({ params }) => {
   };
 
   const handleUpdateButtonClick = () => {
-    // Toggle the update form visibility
     setShowUpdateForm((prevShowUpdateForm) => !prevShowUpdateForm);
   };
 
   return (
-    <div className="container mx-auto mt-8 p-8 bg-white shadow-md rounded">
-      <h3 className="text-2xl text-black font-semibold mb-4">{book?.title}</h3>
+    <div className="container mx-auto px-4 py-8 bg-white text-black rounded-lg shadow-md">
+      <h3 className="text-2xl font-semibold mb-4">{book?.title}</h3>
       <p className="text-gray-700">{book?.description}</p>
 
       <div className="mt-4">
-        <p className="text-blue-800">
-          <strong>Subtitle:</strong> {book?.subtitle}
-        </p>
-        <p className="text-green-800">
-          <strong>Author:</strong> {book?.author}
-        </p>
-        <p className="text-purple-800">
-          <strong>ISBN:</strong> {book?.isbn}
-        </p>
-        <p className="text-indigo-800">
-          <strong>Published:</strong> {book?.published}
-        </p>
-        <p className="text-yellow-800">
-          <strong>Publisher:</strong> {book?.publisher}
-        </p>
-        <p className="text-red-800">
-          <strong>Pages:</strong> {book?.pages}
-        </p>
-        <p className="text-orange-800">
-          <strong>Website:</strong>{" "}
-          <a
-            href={book?.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-orange-800"
-          >
-            {book?.website}
-          </a>
-        </p>
-        <p className="text-gray-800">
-          <strong>Created At:</strong> {book?.created_at}
-        </p>
-        <p className="text-gray-800">
-          <strong>Updated At:</strong> {book?.updated_at}
-        </p>
+        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <dt className="text-sm font-medium text-gray-500">Subtitle</dt>
+            <dd className="mt-1 text-gray-900">{book?.subtitle}</dd>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <dt className="text-sm font-medium text-gray-500">Author</dt>
+            <dd className="mt-1 text-gray-900">{book?.author}</dd>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <dt className="text-sm font-medium text-gray-500">ISBN</dt>
+            <dd className="mt-1 text-gray-900">{book?.isbn}</dd>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <dt className="text-sm font-medium text-gray-500">Published</dt>
+            <dd className="mt-1 text-gray-900">{book?.published}</dd>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <dt className="text-sm font-medium text-gray-500">Publisher</dt>
+            <dd className="mt-1 text-gray-900">{book?.publisher}</dd>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <dt className="text-sm font-medium text-gray-500">Pages</dt>
+            <dd className="mt-1 text-gray-900">{book?.pages}</dd>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <dt className="text-sm font-medium text-gray-500">Website</dt>
+            <a
+              href={book?.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-orange-800"
+            >
+              <dd className="mt-1 text-gray-900">{book?.website}</dd>
+            </a>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <dt className="text-sm font-medium text-gray-500">Created at</dt>
+            <dd className="mt-1 text-gray-900">{book?.created_at}</dd>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <dt className="text-sm font-medium text-gray-500">Updated at</dt>
+            <dd className="mt-1 text-gray-900">{book?.updated_at}</dd>
+          </div>
+        </dl>
       </div>
-      <button
-        type="button"
-        onClick={handleUpdateButtonClick}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
-      >
-        {showUpdateForm ? "Hide Update Form" : "Show Update Form"}
-      </button>
-      <button
-        onClick={() => handleDelete(book.id)}
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-5 focus:outline-none focus:shadow-outline"
-      >
-        Delete
-      </button>
+
+      <div className="flex justify-end mt-4">
+        <button
+          type="button"
+          onClick={handleUpdateButtonClick}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          {showUpdateForm ? "Hide Update Form" : "Show Update Form"}
+        </button>
+
+        <button
+          onClick={() => handleDelete(book.id)}
+          className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Delete
+        </button>
+      </div>
+
       {showUpdateForm && book && (
-        <div className="w-1/2">
-          <h2 className="text-2xl font-bold mt-4 mb-2 text-gray-800">
-            Update Book
-          </h2>
+        <div className="mt-4">
+          <h2 className="text-2xl font-bold mb-4 text-gray-900">Update Book</h2>
           <form>
-            <label className="block mb-2 text-gray-800">Title:</label>
-            <input
-              type="text"
-              value={book.title}
-              onChange={(e) => setBook({ ...book, title: e.target.value })}
-              className="border rounded px-2 py-1 mb-2 text-black"
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Title:
+                </label>
+                <input
+                  type="text"
+                  value={book.title}
+                  onChange={(e) => setBook({ ...book, title: e.target.value })}
+                  className="input-field text-black"
+                />
+              </div>
 
-            <label className="block mb-2 text-gray-800">Description:</label>
-            <input
-              type="text"
-              value={book.description}
-              onChange={(e) =>
-                setBook({
-                  ...book,
-                  description: e.target.value,
-                })
-              }
-              className="border rounded px-2 py-1 mb-2 text-black"
-            />
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <label className="block mb-2 text-sm font-medium text-gray-800">
+                  Description:
+                </label>
+                <textarea
+                  value={book.description}
+                  onChange={(e) =>
+                    setBook({ ...book, description: e.target.value })
+                  }
+                  className="input-field text-black"
+                ></textarea>
+              </div>
 
-            <label className="block mb-2 text-gray-800">Subtitle:</label>
-            <input
-              type="text"
-              value={book.subtitle}
-              onChange={(e) =>
-                setBook({
-                  ...book,
-                  subtitle: e.target.value,
-                })
-              }
-              className="border rounded px-2 py-1 mb-2 text-black"
-            />
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Subtitle:
+                </label>
+                <input
+                  type="text"
+                  value={book.subtitle}
+                  onChange={(e) =>
+                    setBook({ ...book, subtitle: e.target.value })
+                  }
+                  className="input-field text-black"
+                />
+              </div>
 
-            <label className="block mb-2 text-gray-800">Author:</label>
-            <input
-              type="text"
-              value={book.author}
-              onChange={(e) =>
-                setBook({
-                  ...book,
-                  author: e.target.value,
-                })
-              }
-              className="border rounded px-2 py-1 mb-2 text-black"
-            />
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <label className="block mb-2 text-sm font-medium text-gray-800">
+                  Author:
+                </label>
+                <input
+                  type="text"
+                  value={book.author}
+                  onChange={(e) => setBook({ ...book, author: e.target.value })}
+                  className="input-field text-black"
+                />
+              </div>
 
-            <label className="block mb-2 text-gray-800">ISBN:</label>
-            <input
-              type="text"
-              value={book.isbn}
-              onChange={(e) =>
-                setBook({
-                  ...book,
-                  isbn: e.target.value,
-                })
-              }
-              className="border rounded px-2 py-1 mb-2 text-black"
-            />
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  ISBN:
+                </label>
+                <input
+                  type="text"
+                  value={book.isbn}
+                  onChange={(e) => setBook({ ...book, isbn: e.target.value })}
+                  className="input-field text-black"
+                />
+              </div>
 
-            <label className="block mb-2 text-gray-800">Published:</label>
-            <input
-              type="date"
-              value={book.published}
-              onChange={(e) =>
-                setBook({
-                  ...book,
-                  published: e.target.value,
-                })
-              }
-              className="border rounded px-2 py-1 mb-2 text-black"
-            />
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <label className="block mb-2 text-sm font-medium text-gray-800">
+                  Published:
+                </label>
+                <input
+                  type="date"
+                  value={book.published}
+                  onChange={(e) =>
+                    setBook({ ...book, published: e.target.value })
+                  }
+                  className="input-field text-black"
+                />
+              </div>
 
-            <label className="block mb-2 text-gray-800">Publisher:</label>
-            <input
-              type="text"
-              value={book.publisher}
-              onChange={(e) =>
-                setBook({
-                  ...book,
-                  publisher: e.target.value,
-                })
-              }
-              className="border rounded px-2 py-1 mb-2 text-black"
-            />
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Publisher:
+                </label>
+                <input
+                  type="text"
+                  value={book.publisher}
+                  onChange={(e) =>
+                    setBook({ ...book, publisher: e.target.value })
+                  }
+                  className="input-field text-black"
+                />
+              </div>
 
-            <label className="block mb-2 text-gray-800">Pages:</label>
-            <input
-              type="number"
-              value={book.pages}
-              onChange={(e) =>
-                setBook({
-                  ...book,
-                  pages: parseInt(e.target.value, 10),
-                })
-              }
-              className="border rounded px-2 py-1 mb-2 text-black"
-            />
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <label className="block mb-2 text-sm font-medium text-gray-800">
+                  Pages:
+                </label>
+                <input
+                  type="number"
+                  value={book.pages}
+                  onChange={(e) =>
+                    setBook({ ...book, pages: parseInt(e.target.value, 10) })
+                  }
+                  className="input-field text-black"
+                />
+              </div>
 
-            <label className="block mb-2 text-gray-800">Website:</label>
-            <input
-              type="text"
-              value={book.website}
-              onChange={(e) =>
-                setBook({
-                  ...book,
-                  website: e.target.value,
-                })
-              }
-              className="border rounded px-2 py-1 mb-2 text-black"
-            />
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Website:
+                </label>
+                <input
+                  type="text"
+                  value={book.website}
+                  onChange={(e) =>
+                    setBook({ ...book, website: e.target.value })
+                  }
+                  className="input-field text-black"
+                />
+              </div>
+            </div>
 
             <button
               type="button"
               onClick={() => handleUpdate(book.id, book)}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               Save Update
             </button>
           </form>
         </div>
       )}
+
       <button
         type="button"
-        className="flex mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
       >
-        <a href="../books">Kembali</a>
+        <a href="../books" className="text-white">
+          Kembali
+        </a>
       </button>
     </div>
   );

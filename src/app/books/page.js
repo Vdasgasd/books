@@ -63,7 +63,6 @@ const BookList = () => {
 
   const handleAddBook = async () => {
     try {
-      // Add data on the server
       const response = await fetch(
         "https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books/add",
         {
@@ -97,18 +96,15 @@ const BookList = () => {
     }
   };
   const handleLogout = () => {
-    // Clear token and session
     sessionStorage.removeItem("userData");
     setToken("");
 
-    // Redirect to the root directory ("/")
-    window.location.href = "../";
+    window.location.href = "/";
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 bg-white text-black">
       <h2 className="text-3xl font-bold mb-4">Book List</h2>
-
       {showAddForm && (
         <form className="mb-8">
           <div className="mb-4">
@@ -119,7 +115,7 @@ const BookList = () => {
               onChange={(e) =>
                 setNewBook({ ...newBook, title: e.target.value })
               }
-              className="border rounded px-2 py-1 text-black w-full"
+              className="border rounded px-3 py-2 text-black w-full"
             />
           </div>
 
@@ -131,7 +127,7 @@ const BookList = () => {
               onChange={(e) =>
                 setNewBook({ ...newBook, description: e.target.value })
               }
-              className="border rounded px-2 py-1 text-black w-full"
+              className="border rounded px-3 py-2 text-black w-full"
             />
           </div>
 
@@ -143,7 +139,7 @@ const BookList = () => {
               onChange={(e) =>
                 setNewBook({ ...newBook, subtitle: e.target.value })
               }
-              className="border rounded px-2 py-1 text-black w-full"
+              className="border rounded px-3 py-2 text-black w-full"
             />
           </div>
 
@@ -155,7 +151,7 @@ const BookList = () => {
               onChange={(e) =>
                 setNewBook({ ...newBook, author: e.target.value })
               }
-              className="border rounded px-2 py-1 text-black w-full"
+              className="border rounded px-3 py-2 text-black w-full"
             />
           </div>
 
@@ -165,7 +161,7 @@ const BookList = () => {
               type="text"
               value={newBook.isbn}
               onChange={(e) => setNewBook({ ...newBook, isbn: e.target.value })}
-              className="border rounded px-2 py-1 text-black w-full"
+              className="border rounded px-3 py-2 text-black w-full"
             />
           </div>
 
@@ -177,7 +173,7 @@ const BookList = () => {
               onChange={(e) =>
                 setNewBook({ ...newBook, published: e.target.value })
               }
-              className="border rounded px-2 py-1 text-black w-full"
+              className="border rounded px-3 py-2 text-black w-full"
             />
           </div>
 
@@ -189,7 +185,7 @@ const BookList = () => {
               onChange={(e) =>
                 setNewBook({ ...newBook, publisher: e.target.value })
               }
-              className="border rounded px-2 py-1 text-black w-full"
+              className="border rounded px-3 py-2 text-black w-full"
             />
           </div>
 
@@ -201,7 +197,7 @@ const BookList = () => {
               onChange={(e) =>
                 setNewBook({ ...newBook, pages: parseInt(e.target.value, 10) })
               }
-              className="border rounded px-2 py-1 text-black w-full"
+              className="border rounded px-3 py-2 text-black w-full"
             />
           </div>
 
@@ -213,14 +209,14 @@ const BookList = () => {
               onChange={(e) =>
                 setNewBook({ ...newBook, website: e.target.value })
               }
-              className="border rounded px-2 py-1 text-black w-full"
+              className="border rounded px-3 py-2 text-black w-full"
             />
           </div>
 
           <button
             type="button"
             onClick={handleAddBook}
-            className="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-3"
+            className="bg-green-500 hover:bg-green-700  font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-3"
           >
             Add Book
           </button>
@@ -236,19 +232,20 @@ const BookList = () => {
       >
         {showAddForm ? "Cancel" : "Add Book"}
       </button>
-
       <button
         type="button"
         onClick={handleLogout}
-        className="fixed right-5 top-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4"
+        className="fixed right-12 top-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4"
       >
         Logout
       </button>
-
       <ul className="mt-4">
         {books.map((book) => (
-          <li key={book.id} className="mb-4">
-            <strong className="text-xl">{book.title}</strong> by {book.author}
+          <li key={book.id} className="mb-4 border p-4 rounded">
+            <strong className="text-xl block mb-2">{book.title}</strong>
+            <span className="text-gray-700 block mb-2">
+              {book.author} - {book.published}
+            </span>
             <p className="text-gray-700">{book.description}</p>
             <Link href={`/books/${book.id}`} className="text-blue-500">
               Detail
