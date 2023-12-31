@@ -92,11 +92,6 @@ const Login = () => {
               Register
             </a>
           </div>
-          <div className="flex mt-2">
-            <a href="/books" className="text-blue-600">
-              Bypass to books directory
-            </a>
-          </div>
         </form>
       </div>
     </div>
