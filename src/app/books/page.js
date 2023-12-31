@@ -96,6 +96,14 @@ const BookList = () => {
       console.error("Error adding book:", error);
     }
   };
+  const handleLogout = () => {
+    // Clear token and session
+    sessionStorage.removeItem("userData");
+    setToken("");
+
+    // Redirect to the root directory ("/")
+    window.location.href = "../";
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -164,7 +172,7 @@ const BookList = () => {
           <div className="mb-4">
             <label className="block text-white mb-2">Published:</label>
             <input
-              type="text"
+              type="date"
               value={newBook.published}
               onChange={(e) =>
                 setNewBook({ ...newBook, published: e.target.value })
@@ -227,6 +235,14 @@ const BookList = () => {
         }`}
       >
         {showAddForm ? "Cancel" : "Add Book"}
+      </button>
+
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="fixed right-5 top-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4"
+      >
+        Logout
       </button>
 
       <ul className="mt-4">

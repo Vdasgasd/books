@@ -7,24 +7,7 @@ const DetailBooks = ({ params }) => {
   const { id } = params;
   const [book, setBook] = useState([]);
   const [token, setToken] = useState("");
-  const [showUpdateForm, setShowUpdateForm] = useState(false); // New state for showing update form
-
-  const handleDelete = async (id) => {
-    try {
-      // Delete data on the server
-      await fetch(
-        `https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      // Update state
-      //   setBook((prevBooks) => prevBooks.filter((book) => book.id !== id));
-    } catch (error) {
-      console.error("Error deleting book:", error);
-    }
-  };
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
 
   useEffect(() => {
     const storedToken = sessionStorage.getItem("userData");
@@ -82,15 +65,44 @@ const DetailBooks = ({ params }) => {
           body: JSON.stringify(newData),
         }
       );
-      //   const updatedBook = await response.json();
 
-      //   // Update state
-      //   setBook((prevBooks) =>
-      //     prevBooks.map((book) => (book.id === id ? updatedBook : book))
-      //   );
-      //   setBook(null); // Reset book after update
+      if (response.ok) {
+        // Update state with the updated book
+        const updatedBook = await response.json();
+        setBook(updatedBook);
+
+        // Hide the update form after a successful update
+        setShowUpdateForm(false);
+      } else {
+        console.error(
+          "Failed to update book:",
+          response.status,
+          response.statusText
+        );
+      }
     } catch (error) {
       console.error("Error updating book:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      // Delete data on the server
+      await fetch(
+        `https://book-crud-service-6dmqxfovfq-et.a.run.app/api/books/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setBook(null);
+      window.location.href = "../books";
+    } catch (error) {
+      console.error("Error deleting book:", error);
     }
   };
 
@@ -100,40 +112,47 @@ const DetailBooks = ({ params }) => {
   };
 
   return (
-    <div className=" shadow-md rounded p-6">
-      <h3 className="text-xl font-semibold mb-2">{book?.title}</h3>
+    <div className="container mx-auto mt-8 p-8 bg-white shadow-md rounded">
+      <h3 className="text-2xl text-black font-semibold mb-4">{book?.title}</h3>
       <p className="text-gray-700">{book?.description}</p>
-      <p>
-        <strong>Subtitle:</strong> {book?.subtitle}
-      </p>
-      <p>
-        <strong>Author:</strong> {book?.author}
-      </p>
-      <p>
-        <strong>ISBN:</strong> {book?.isbn}
-      </p>
-      <p>
-        <strong>Published:</strong> {book?.published}
-      </p>
-      <p>
-        <strong>Publisher:</strong> {book?.publisher}
-      </p>
-      <p>
-        <strong>Pages:</strong> {book?.pages}
-      </p>
-      <p>
-        <strong>Website:</strong>{" "}
-        <a href={book?.website} target="_blank" rel="noopener noreferrer">
-          {book?.website}
-        </a>
-      </p>
-      <p>
-        <strong>Created At:</strong> {book?.created_at}
-      </p>
-      <p>
-        <strong>Updated At:</strong> {book?.updated_at}
-      </p>
-      {/* Button to toggle update form */}
+
+      <div className="mt-4">
+        <p className="text-blue-800">
+          <strong>Subtitle:</strong> {book?.subtitle}
+        </p>
+        <p className="text-green-800">
+          <strong>Author:</strong> {book?.author}
+        </p>
+        <p className="text-purple-800">
+          <strong>ISBN:</strong> {book?.isbn}
+        </p>
+        <p className="text-indigo-800">
+          <strong>Published:</strong> {book?.published}
+        </p>
+        <p className="text-yellow-800">
+          <strong>Publisher:</strong> {book?.publisher}
+        </p>
+        <p className="text-red-800">
+          <strong>Pages:</strong> {book?.pages}
+        </p>
+        <p className="text-orange-800">
+          <strong>Website:</strong>{" "}
+          <a
+            href={book?.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-orange-800"
+          >
+            {book?.website}
+          </a>
+        </p>
+        <p className="text-gray-800">
+          <strong>Created At:</strong> {book?.created_at}
+        </p>
+        <p className="text-gray-800">
+          <strong>Updated At:</strong> {book?.updated_at}
+        </p>
+      </div>
       <button
         type="button"
         onClick={handleUpdateButtonClick}
@@ -141,11 +160,19 @@ const DetailBooks = ({ params }) => {
       >
         {showUpdateForm ? "Hide Update Form" : "Show Update Form"}
       </button>
+      <button
+        onClick={() => handleDelete(book.id)}
+        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-5 focus:outline-none focus:shadow-outline"
+      >
+        Delete
+      </button>
       {showUpdateForm && book && (
         <div className="w-1/2">
-          <h2 className="text-2xl font-bold mt-4 mb-2">Update Book</h2>
+          <h2 className="text-2xl font-bold mt-4 mb-2 text-gray-800">
+            Update Book
+          </h2>
           <form>
-            <label className="block mb-2 text-white">Title:</label>
+            <label className="block mb-2 text-gray-800">Title:</label>
             <input
               type="text"
               value={book.title}
@@ -153,12 +180,12 @@ const DetailBooks = ({ params }) => {
               className="border rounded px-2 py-1 mb-2 text-black"
             />
 
-            <label className="block mb-2 text-white">Description:</label>
+            <label className="block mb-2 text-gray-800">Description:</label>
             <input
               type="text"
               value={book.description}
               onChange={(e) =>
-                setbook({
+                setBook({
                   ...book,
                   description: e.target.value,
                 })
@@ -166,12 +193,12 @@ const DetailBooks = ({ params }) => {
               className="border rounded px-2 py-1 mb-2 text-black"
             />
 
-            <label className="block mb-2 text-white">Subtitle:</label>
+            <label className="block mb-2 text-gray-800">Subtitle:</label>
             <input
               type="text"
               value={book.subtitle}
               onChange={(e) =>
-                setbook({
+                setBook({
                   ...book,
                   subtitle: e.target.value,
                 })
@@ -179,12 +206,12 @@ const DetailBooks = ({ params }) => {
               className="border rounded px-2 py-1 mb-2 text-black"
             />
 
-            <label className="block mb-2 text-white">Author:</label>
+            <label className="block mb-2 text-gray-800">Author:</label>
             <input
               type="text"
               value={book.author}
               onChange={(e) =>
-                setbook({
+                setBook({
                   ...book,
                   author: e.target.value,
                 })
@@ -192,12 +219,12 @@ const DetailBooks = ({ params }) => {
               className="border rounded px-2 py-1 mb-2 text-black"
             />
 
-            <label className="block mb-2 text-white">ISBN:</label>
+            <label className="block mb-2 text-gray-800">ISBN:</label>
             <input
               type="text"
               value={book.isbn}
               onChange={(e) =>
-                setbook({
+                setBook({
                   ...book,
                   isbn: e.target.value,
                 })
@@ -205,12 +232,12 @@ const DetailBooks = ({ params }) => {
               className="border rounded px-2 py-1 mb-2 text-black"
             />
 
-            <label className="block mb-2 text-white">Published:</label>
+            <label className="block mb-2 text-gray-800">Published:</label>
             <input
-              type="text"
+              type="date"
               value={book.published}
               onChange={(e) =>
-                setbook({
+                setBook({
                   ...book,
                   published: e.target.value,
                 })
@@ -218,12 +245,12 @@ const DetailBooks = ({ params }) => {
               className="border rounded px-2 py-1 mb-2 text-black"
             />
 
-            <label className="block mb-2 text-white">Publisher:</label>
+            <label className="block mb-2 text-gray-800">Publisher:</label>
             <input
               type="text"
               value={book.publisher}
               onChange={(e) =>
-                setbook({
+                setBook({
                   ...book,
                   publisher: e.target.value,
                 })
@@ -231,12 +258,12 @@ const DetailBooks = ({ params }) => {
               className="border rounded px-2 py-1 mb-2 text-black"
             />
 
-            <label className="block mb-2 text-white">Pages:</label>
+            <label className="block mb-2 text-gray-800">Pages:</label>
             <input
               type="number"
               value={book.pages}
               onChange={(e) =>
-                setbook({
+                setBook({
                   ...book,
                   pages: parseInt(e.target.value, 10),
                 })
@@ -244,12 +271,12 @@ const DetailBooks = ({ params }) => {
               className="border rounded px-2 py-1 mb-2 text-black"
             />
 
-            <label className="block mb-2 text-white">Website:</label>
+            <label className="block mb-2 text-gray-800">Website:</label>
             <input
               type="text"
               value={book.website}
               onChange={(e) =>
-                setbook({
+                setBook({
                   ...book,
                   website: e.target.value,
                 })
@@ -267,6 +294,12 @@ const DetailBooks = ({ params }) => {
           </form>
         </div>
       )}
+      <button
+        type="button"
+        className="flex mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        <a href="../books">Kembali</a>
+      </button>
     </div>
   );
 };

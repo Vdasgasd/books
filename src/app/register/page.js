@@ -25,7 +25,8 @@ const RegisterForm = () => {
           },
         }
       );
-      console.log(response.data); // handle the response as needed
+      console.log(response.data);
+      window.location.href = "../";
     } catch (error) {
       console.error("Error during registration:", error);
     }
@@ -109,7 +110,7 @@ const RegisterForm = () => {
               Register
             </button>
           </div>
-          <a href="/login" className="text-blue-400 mt-2">
+          <a href="/login" className="text-blue-400 mt-2 flex">
             Login instead
           </a>
         </form>
